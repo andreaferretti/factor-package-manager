@@ -1,8 +1,8 @@
 ! Copyright (C) 2014 Andrea Ferretti.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors kernel namespaces packages.fs packages.projects
-  packages.publish packages.scm parser sequences strings vocabs
-  vocabs.loader words.symbol ;
+USING: accessors combinators kernel namespaces packages.fs
+  packages.projects packages.publish packages.scm parser
+  sequences strings vocabs vocabs.loader words.symbol ;
 IN: packages
 
 <PRIVATE
@@ -19,16 +19,21 @@ DEFER: activate-file
   deps>> [ name>> project-file activate-file ] each ;
 
 : setup-all ( project -- )
-  dup setup-deps
-  dup setup-roots
-  dup setup-recursive
-  setup-requirements ;
+  {
+    [ setup-deps ]
+    [ setup-roots ]
+    [ setup-recursive ]
+    [ setup-requirements ]
+  } cleave ;
 
 : activate-file ( path -- )
   run-file current-project get setup-all ;
+
+: publish-file ( path -- )
+  dup run-file publish-current ;
 
 PRIVATE>
 
 : activate ( vocab -- ) vocab-source-path activate-file ;
 
-: publish ( vocab -- ) vocab-source-path dup run-file publish-current ;
+: publish ( vocab -- ) vocab-source-path publish-file ;
