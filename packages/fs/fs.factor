@@ -1,17 +1,17 @@
 ! Copyright (C) 2014 Andrea Ferretti.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors io.directories io.directories.hierarchy
-  io.files io.files.info io.pathnames kernel math.order namespaces
-  parser sequences vocabs.files vocabs.loader ;
+    io.files io.files.info io.pathnames kernel math.order namespaces
+    parser sequences vocabs.files vocabs.loader ;
 IN: packages.fs
 
 CONSTANT: default-package-cache "resource:cache"
 
 CONSTANT: default-roots V{
-  "resource:core"
-  "resource:basis"
-  "resource:extra"
-  "resource:work"
+    "resource:core"
+    "resource:basis"
+    "resource:extra"
+    "resource:work"
 }
 
 SYMBOL: package-cache
@@ -41,37 +41,37 @@ PRIVATE>
 PRIVATE>
 
 : relative-path ( from to -- path )
-  [ path-components ] bi@
-  2dup common-head-els
-  [ tail [ drop ".." ] map ] [ tail ] bi-curry
-  bi* append
-  path-separator join ; inline
+    [ path-components ] bi@
+    2dup common-head-els
+    [ tail [ drop ".." ] map ] [ tail ] bi-curry
+    bi* append
+    path-separator join ; inline
 
 <PRIVATE
 
 : copy-relative-to ( to from path -- )
-  [ relative-path append-path ] [ swap copy-file ] bi ;
+    [ relative-path append-path ] [ swap copy-file ] bi ;
 
 : (clean-preserving) ( path preserving -- )
-  [
     [
-      over start
-      [ drop ] [
-        dup file-info regular-file?
-        [ delete-file ] [ drop ] if
-      ] if
-    ] curry each
-  ] curry with-directory-tree-files ;
+        [
+            over start
+            [ drop ] [
+                dup file-info regular-file?
+                [ delete-file ] [ drop ] if
+            ] if
+        ] curry each
+    ] curry with-directory-tree-files ;
 
 PRIVATE>
 
 : copy-vocab ( dest vocab -- )
-  [ find-vocab-root ]
-  [ vocab-files [ exists? ] filter ] bi
-  [ copy-relative-to ] 2with each ;
+    [ find-vocab-root ]
+    [ vocab-files [ exists? ] filter ] bi
+    [ copy-relative-to ] 2with each ;
 
 : clean-preserving ( path preserving -- )
-  over exists? [ (clean-preserving) ] [ 2drop ] if ;
+    over exists? [ (clean-preserving) ] [ 2drop ] if ;
 
 <PRIVATE
 
@@ -80,4 +80,4 @@ PRIVATE>
 PRIVATE>
 
 : set-vocab-roots ( dependencies -- )
-  reset-vocab-roots [ name>> project-path add-vocab-root ] each ;
+    reset-vocab-roots [ name>> project-path add-vocab-root ] each ;

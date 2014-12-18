@@ -8,10 +8,10 @@ SYMBOL: git
 SYMBOL: hg
 
 TUPLE: project
-  { name string }
-  { url string }
-  { version string }
-  { scm symbol initial: git } ;
+    { name string }
+    { url string }
+    { version string }
+    { scm symbol initial: git } ;
 
 C: <project> project
 
@@ -20,8 +20,8 @@ PREDICATE: git-project < project scm>> git = ;
 PREDICATE: hg-project < project scm>> hg = ;
 
 TUPLE: local-project < project
-  { vocabs sequence }
-  { deps sequence } ;
+    { vocabs sequence }
+    { deps sequence } ;
 
 C: <local-project> local-project
 
@@ -30,7 +30,7 @@ SYMBOL: current-project
 <PRIVATE
 
 : github-url ( user repo -- url )
-  "https://github.com/%s/%s" sprintf ;
+    "https://github.com/%s/%s" sprintf ;
 
 PRIVATE>
 

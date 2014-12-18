@@ -5,11 +5,11 @@ IN: packages.project
 
 PROJECT: packages
 
-VERSION: 0.1.1
+VERSION: 0.1.2
 
 SCM: git
 
 URL: git@github.com:andreaferretti/factor-package-manager.git
 
 VOCABS: packages packages.fs packages.projects
-  packages.publish packages.scm packages.syntax ;
+    packages.publish packages.scm packages.syntax ;

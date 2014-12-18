@@ -1,7 +1,7 @@
 ! Copyright (C) 2014 Andrea Ferretti.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors arrays fry io.directories io.launcher kernel
-  make packages.fs packages.projects sequences ;
+    make packages.fs packages.projects sequences ;
 IN: packages.scm
 
 GENERIC: clone ( project -- )
@@ -27,40 +27,40 @@ GENERIC: scm-dir ( project -- path )
 : setup ( project -- ) dup ensure checkout ;
 
 : commit ( project -- )
-  dup ensure-init
-  dup commit-all
-  dup tag
-  dup url>> empty? [ drop ] [ push ] if ;
+    dup ensure-init
+    dup commit-all
+    dup tag
+    dup url>> empty? [ drop ] [ push ] if ;
 
 ! SCM-specific implementations
 
 <PRIVATE
 
 : scm-clone ( project commands -- )
-  swap
-  [ url>> ]
-  [ name>> project-directory ]
-  bi 2array append
-  try-process ;
+    swap
+    [ url>> ]
+    [ name>> project-directory ]
+    bi 2array append
+    try-process ;
 
 : execute-in-context ( project commands -- )
-  [ name>> project-directory ] dip
-  [ try-process ] curry
-  with-directory ;
+    [ name>> project-directory ] dip
+    [ try-process ] curry
+    with-directory ;
 
 : execute-all-in-context ( project commands -- ) [ execute-in-context ] with each ;
 
 : already-init? ( project -- ? )
-  [ name>> project-directory ] [ scm-dir ] bi contains-dir? ;
+    [ name>> project-directory ] [ scm-dir ] bi contains-dir? ;
 
 : scm-ensure-init ( project -- )
-  dup already-init? [ drop ] [ init ] if ;
+    dup already-init? [ drop ] [ init ] if ;
 
 : scm-checkout ( project commands -- )
-  [ drop name>> project-directory ]
-  [ swap version>> suffix ] 2bi
-  [ try-process ] curry
-  with-directory ;
+    [ drop name>> project-directory ]
+    [ swap version>> suffix ] 2bi
+    [ try-process ] curry
+    with-directory ;
 
 PRIVATE>
 
@@ -77,19 +77,19 @@ M: git-project checkout { "git" "checkout" } scm-checkout ;
 M: git-project ensure-init scm-ensure-init ;
 
 M: git-project commit-all
-  {
-    { "git" "add" "--all" }
-    { "git" "commit" "-m" "auto-commit" }
-  } execute-all-in-context ;
+    {
+      { "git" "add" "--all" }
+      { "git" "commit" "-m" "auto-commit" }
+    } execute-all-in-context ;
 
 M: git-project tag
-  dup version>> { "git" "tag" } swap suffix execute-in-context ;
+    dup version>> { "git" "tag" } swap suffix execute-in-context ;
 
 M: git-project push
-  dup url>>
-  [ '[ "git" , "push" , _ , "master" , ] { } make ]
-  [ '[ "git" , "push" , _ , "--tags" , ] { } make ] bi 2array
-  execute-all-in-context ;
+    dup url>>
+    [ '[ "git" , "push" , _ , "master" , ] { } make ]
+    [ '[ "git" , "push" , _ , "--tags" , ] { } make ] bi 2array
+    execute-all-in-context ;
 
 M: git-project scm-dir drop ".git" ;
 
@@ -106,15 +106,15 @@ M: hg-project checkout { "hg" "update" } scm-checkout ;
 M: hg-project ensure-init scm-ensure-init ;
 
 M: hg-project commit-all
-  {
-    { "hg" "addremove" }
-    { "hg" "commit" "-m" "auto-commit" }
-  } execute-all-in-context ;
+    {
+      { "hg" "addremove" }
+      { "hg" "commit" "-m" "auto-commit" }
+    } execute-all-in-context ;
 
 M: hg-project tag
-  dup version>> { "hg" "tag" } swap suffix execute-in-context ;
+    dup version>> { "hg" "tag" } swap suffix execute-in-context ;
 
 M: hg-project push
-  dup url>> { "hg" "push" } swap suffix execute-in-context ;
+    dup url>> { "hg" "push" } swap suffix execute-in-context ;
 
 M: hg-project scm-dir drop ".hg" ;
