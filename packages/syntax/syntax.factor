@@ -8,28 +8,28 @@ IN: packages.syntax
 
 : new-project ( name -- project ) local-project new swap >>name ;
 
-: add-dependency ( project dep -- project ) [ dup deps>> ] dip suffix >>deps ;
+: add-dependency ( project dep -- project ) [ suffix ] curry change-deps ;
 
-: add-vocab ( project vocab -- project ) [ dup vocabs>> ] dip suffix >>vocabs ;
+: add-vocab ( project vocab -- project ) [ suffix ] curry change-vocabs ;
 
-: add-vocabs ( project vocabs -- project ) [ dup vocabs>> ] dip append >>vocabs ;
+: add-vocabs ( project vocabs -- project ) [ append ] curry change-vocabs ;
 
 PRIVATE>
 
 SYNTAX: PROJECT: scan-token new-project current-project set-global ;
 
-SYNTAX: VERSION: scan-token current-project get swap >>version drop ;
+SYNTAX: VERSION: scan-token current-project get version<< ;
 
-SYNTAX: SCM: scan-word current-project get swap >>scm drop ;
+SYNTAX: SCM: scan-word current-project get scm<< ;
 
-SYNTAX: URL: scan-token current-project get swap >>url drop ;
+SYNTAX: URL: scan-token current-project get url<< ;
 
-SYNTAX: VOCAB: scan-token current-project get swap add-vocab drop ;
+SYNTAX: VOCAB: current-project get scan-token add-vocab drop ;
 
-SYNTAX: VOCABS: ";" parse-tokens current-project get swap add-vocabs drop ;
+SYNTAX: VOCABS: current-project get ";" parse-tokens add-vocabs drop ;
 
-SYNTAX: GIT-DEP: ";" parse-tokens first3 <git> current-project get swap add-dependency drop ;
+SYNTAX: GIT-DEP: current-project get ";" parse-tokens first3 <git> add-dependency drop ;
 
-SYNTAX: HG-DEP: ";" parse-tokens first3 <hg> current-project get swap add-dependency drop ;
+SYNTAX: HG-DEP: current-project get ";" parse-tokens first3 <hg> add-dependency drop ;
 
-SYNTAX: GITHUB-DEP: ";" parse-tokens first4 <github> current-project get swap add-dependency drop ;
+SYNTAX: GITHUB-DEP: current-project get ";" parse-tokens first4 <github> add-dependency drop ;

@@ -21,23 +21,22 @@ default-package-cache package-cache set-global
 
 <PRIVATE
 
-: rel-project-directory ( name -- path ) package-cache get prepend-path ;
+: project-path ( name -- path ) package-cache get prepend-path ;
 
 PRIVATE>
 
-: project-directory ( name -- path ) rel-project-directory absolute-path ;
+: project-directory ( name -- path ) project-path absolute-path ;
 
 : project-exists? ( name -- ? ) project-directory exists? ;
 
-: project-file ( name -- path ) rel-project-directory "project.factor" append-path ;
+: project-file ( name -- path ) project-path "project.factor" append-path ;
 
 : contains-dir? ( base dir -- ? ) append-path exists? ;
 
 <PRIVATE
 
-: min-length ( seq1 seq2 -- n ) [ length ] bi@ min ;
-
-: common-head-els ( seq1 seq2 -- i ) [ mismatch ] [ min-length ] 2bi or ;
+: common-head-els ( seq1 seq2 -- i )
+    [ mismatch ] [ min-length ] 2bi or ;
 
 PRIVATE>
 
@@ -51,9 +50,7 @@ PRIVATE>
 <PRIVATE
 
 : copy-relative-to ( to from path -- )
-  dup
-  [ relative-path append-path ] dip
-  swap copy-file ;
+  [ relative-path append-path ] [ swap copy-file ] bi ;
 
 : (clean-preserving) ( path preserving -- )
   [
@@ -83,4 +80,4 @@ PRIVATE>
 PRIVATE>
 
 : set-vocab-roots ( dependencies -- )
-  reset-vocab-roots [ name>> rel-project-directory add-vocab-root ] each ;
+  reset-vocab-roots [ name>> project-path add-vocab-root ] each ;

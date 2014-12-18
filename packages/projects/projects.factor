@@ -1,6 +1,7 @@
 ! Copyright (C) 2014 Andrea Ferretti.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays kernel sequences strings words.symbol ;
+USING: accessors arrays formatting kernel sequences strings
+  words.symbol ;
 IN: packages.projects
 
 SYMBOL: git
@@ -14,11 +15,9 @@ TUPLE: project
 
 C: <project> project
 
-PREDICATE: git-project < project
-  scm>> git = ;
+PREDICATE: git-project < project scm>> git = ;
 
-PREDICATE: hg-project < project
-  scm>> hg = ;
+PREDICATE: hg-project < project scm>> hg = ;
 
 TUPLE: local-project < project
   { vocabs sequence }
@@ -31,8 +30,7 @@ SYMBOL: current-project
 <PRIVATE
 
 : github-url ( user repo -- url )
-  "https://github.com" -rot 3array
-  "/" join ;
+  "https://github.com/%s/%s" sprintf ;
 
 PRIVATE>
 
